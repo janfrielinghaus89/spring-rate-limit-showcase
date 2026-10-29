@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: spring-rate-limit-showcase
+
+server:
+  port: 8080
+
+app:
+  rate-limit:
+    capacity: 5
+    refill-tokens: 5
+    refill-period: 1m
+    max-tracked-clients: 10_000
+    expire-after-access: 15m
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+
+info:
+  app:
+    name: ${spring.application.name}
+    description: Enterprise-style API rate-limiting showcase
