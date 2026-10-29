@@ -393,3 +393,21 @@ Good follow-up features, without bloating the initial showcase, would be:
 ## License
 
 MIT
+
+
+## Hardening test coverage
+
+The hardening suite tests client isolation, concurrent consumption of a shared bucket, and
+deterministic token refill using a manually advanced Bucket4j `TimeMeter` (no sleeps).
+It also checks configuration constraints and verifies the HTTP 429 Problem Details contract.
+Run all checks with `mvn clean verify`.
+
+### Security and deployment considerations
+
+`X-Client-Id` is **user-controlled**, not an authenticated identity. It is intentionally
+used only for demonstration. In production, derive keys from trusted authentication
+(e.g. API key or validated principal), and avoid trusting unverified forwarding headers.
+The in-memory Caffeine cache is **per application instance**, not a distributed quota.
+The maximum-size/expiry policy also means client eviction resets that client's bucket;
+this is a bounded-memory demo, **not a strict anti-abuse gateway**. For multiple app
+replicas or stronger enforcement, use a shared backend and an authenticated identity.
