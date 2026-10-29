@@ -41,8 +41,11 @@ class RateLimitIntegrationTest {
         mockMvc.perform(get("/api/v1/ping").header("X-Client-Id", clientId))
                 .andExpect(status().isTooManyRequests())
                 .andExpect(header().exists("Retry-After"))
+                .andExpect(header().string(RateLimitInterceptor.REMAINING_HEADER, "0"))
+                .andExpect(header().string("Content-Type", "application/problem+json"))
                 .andExpect(jsonPath("$.title").value("Rate limit exceeded"))
                 .andExpect(jsonPath("$.status").value(429))
+                .andExpect(jsonPath("$.instance").value("/api/v1/ping"))
                 .andExpect(jsonPath("$.path").value("/api/v1/ping"))
                 .andExpect(jsonPath("$.retryAfterSeconds", greaterThanOrEqualTo(1)));
     }

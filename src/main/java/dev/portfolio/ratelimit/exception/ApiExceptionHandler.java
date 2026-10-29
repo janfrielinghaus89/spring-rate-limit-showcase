@@ -24,6 +24,7 @@ public class ApiExceptionHandler {
                 HttpStatus.TOO_MANY_REQUESTS,
                 "Too many requests. Retry after the indicated delay.");
         problem.setTitle("Rate limit exceeded");
+        problem.setInstance(java.net.URI.create(request.getRequestURI()));
         problem.setProperty("path", request.getRequestURI());
         problem.setProperty("retryAfterSeconds", retryAfterSeconds);
 
